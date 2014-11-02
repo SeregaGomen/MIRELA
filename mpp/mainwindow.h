@@ -37,6 +37,7 @@ public slots:
     void setScale(void);
     void setTranslate(void);
     void setupImageParams(void);
+    void stop(void);
 
 protected:
     void closeEvent(QCloseEvent *event);
@@ -63,6 +64,8 @@ private:
     int m2;
     int m3;
     bool isDocOpened;
+    bool isStoped;
+    bool isStarted;
     void readFile(QTextStream&);
     void printInfo(void);
     void checkMenuState(void);

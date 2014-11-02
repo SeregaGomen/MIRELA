@@ -6,5 +6,6 @@
         <file>image/kformula.png</file>
         <file>image/rotate.png</file>
         <file>image/scale.png</file>
+        <file>image/cancel.png</file>
     </qresource>
 </RCC>

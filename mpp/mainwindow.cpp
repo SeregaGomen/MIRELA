@@ -35,9 +35,12 @@ MainWindow::MainWindow(QWidget *parent) :
 #endif
     QTextCodec::setCodecForLocale(codec);
 
+
     setupRecentActions();
     readSettings();
     createRecentMenu();
+
+    ui->actionStop->setVisible(false);
 
     tabWidget = new QTabWidget(this);
     tabWidget->setTabsClosable(true);
@@ -45,13 +48,12 @@ MainWindow::MainWindow(QWidget *parent) :
     setCentralWidget(tabWidget);
 
     rList = new TResultList;
-    isDocOpened = false;
+    isStarted = isStoped = isDocOpened = false;
 
     m1 = m2 = m3 = 0;
 
     pb = new QProgressBar(statusBar());
     pb->setTextVisible(true);
-    pb->hide();
     statusBar()->addPermanentWidget(pb);
 
     connect(tabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(closeTab(int)));
@@ -100,12 +102,10 @@ void MainWindow::readFile(QTextStream& in)
                    sg23,
                    sg33;
 
-    QApplication::setOverrideCursor(Qt::WaitCursor);
     // Чтение количества узлов в конструкции
     str = in.readLine();
     if (str.left(14).trimmed() != "M1 x M2 x M3")
     {
-        QApplication::restoreOverrideCursor();
         QMessageBox::information(this, tr("Ошибка"), tr("Неверный формат файла!"));
         return;
     }
@@ -115,7 +115,6 @@ void MainWindow::readFile(QTextStream& in)
     ts >> m1 >> m2 >> m3;
     if (ts.status() != QTextStream::Ok)
     {
-        QApplication::restoreOverrideCursor();
         QMessageBox::information(this, tr("Ошибка"), tr("Неверный формат файла!"));
         return;
     }
@@ -133,9 +132,10 @@ void MainWindow::readFile(QTextStream& in)
     pb->setMinimum(0);
     pb->setMaximum(size - 1);
     pb->setFormat(tr("Загрузка координат"));
-    pb->show();
     for (int i = 0; i < size; i++)
     {
+        if (isStoped)
+            return;
         if (i%10 == 0)
             pb->setValue(i);
 
@@ -149,12 +149,10 @@ void MainWindow::readFile(QTextStream& in)
 
         if (ts.status() != QTextStream::Ok)
         {
-            QApplication::restoreOverrideCursor();
             QMessageBox::information(this, tr("Ошибка"), tr("Неверный формат файла!"));
             return;
         }
     }
-    pb->hide();
     rList->clear();
     // Считываем данные (с учетом итераций)
     while (!in.atEnd())
@@ -168,7 +166,6 @@ void MainWindow::readFile(QTextStream& in)
             ts >> iter;
             if (ts.status() != QTextStream::Ok)
             {
-                QApplication::restoreOverrideCursor();
                 QMessageBox::information(this, tr("Ошибка"), tr("Неверный формат файла!"));
                 return;
             }
@@ -185,7 +182,6 @@ void MainWindow::readFile(QTextStream& in)
             ts >> nu >> u[0] >> u[1] >> u[2] >> sg[0] >> sg[1] >> sg[2] >> sg[3] >> sg[4] >> sg[5];
             if (ts.status() != QTextStream::Ok)
             {
-                QApplication::restoreOverrideCursor();
                 QMessageBox::information(this, tr("Ошибка"), tr("Неверный формат файла!"));
                 return;
             }
@@ -203,10 +199,11 @@ void MainWindow::readFile(QTextStream& in)
         // Считываем значения функций
         pb->setMinimum(0);
         pb->setMaximum(size - 1);
-        pb->show();
         pb->setFormat(tr("Загрузка функций"));
         for (int i = 0; i < size; i++)
         {
+            if (isStoped)
+                return;
             if (i%10 == 0)
                 pb->setValue(i);
             qApp->processEvents();
@@ -225,12 +222,10 @@ void MainWindow::readFile(QTextStream& in)
 
             if (ts.status() != QTextStream::Ok)
             {
-                QApplication::restoreOverrideCursor();
                 QMessageBox::information(this, tr("Ошибка"), tr("Неверный формат файла!"));
                 return;
             }
         }
-        pb->hide();
         // Добавляем функции в список для анализа
         prefix = (iter == -1) ? "" : QString("iter%1->").arg(iter);
         rList->addResult(u1,(prefix + u[0]).toStdString());
@@ -243,7 +238,6 @@ void MainWindow::readFile(QTextStream& in)
         rList->addResult(sg23,(prefix + sg[4]).toStdString());
         rList->addResult(sg33,(prefix + sg[5]).toStdString());
     }
-    QApplication::restoreOverrideCursor();
 }
 //-------------------------------------------------------------------------------------
 // Вывод сводки о загруженных данных
@@ -347,7 +341,6 @@ void MainWindow::createFE(void)
     // Реконструируем КЭ
     tmp.resize(x.size(),8);
 
-    pb->show();
     pb->setMinimum(0);
     pb->setMaximum(m1*m2*m3 - 1);
     pb->setFormat(tr("Формирование КЭ"));
@@ -357,6 +350,8 @@ void MainWindow::createFE(void)
             {
                 nf = n1 + m1*(n2 - 1) + m1*m2*(n3 - 1);
 
+                if (isStoped)
+                    return;
                 if (count%10 == 0)
                     pb->setValue(count++);
                 qApp->processEvents();
@@ -377,7 +372,6 @@ void MainWindow::createFE(void)
                         }
             }
     numFE = index1;
-    pb->hide();
 
 
     // Удаляем КЭ с отрицателным NF
@@ -461,12 +455,13 @@ void MainWindow::createSurface(void)
             z3;
     matrix<int> boundList(6*fe.size1(),num1 + 1);
 
-    pb->show();
     pb->setMinimum(0);
     pb->setMaximum(fe.size1() - 1);
     pb->setFormat(tr("Формирование поверхности"));
     for (i = 0; i < (int)fe.size1() - 1; i++)
     {
+        if (isStoped)
+            return;
         if (i%10 == 0)
             pb->setValue(i);
         qApp->processEvents();
@@ -486,7 +481,6 @@ void MainWindow::createSurface(void)
                         }
             }
     }
-    pb->hide();
     numFaces = 0;
     for (i = 0; i < (int)fe.size1(); i++)
         for (j = 0; j < num1; j++)
@@ -594,12 +588,6 @@ void MainWindow::setupImageParams(void)
         iDlg->setImageParams(qobject_cast<GLWidget*>(tabWidget->currentWidget())->getImageParams(),true);
         if (iDlg->exec() == QDialog::Accepted)
         {
-//            if ((iDlg->getImageParams().isForce || iDlg->getImageParams().isLimit) && !qobject_cast<GLObjWidget*>(tabWidget->widget(0))->isSelectedVertex())
-//            {
-//                pb->show();
-//                qobject_cast<GLObjWidget*>(tabWidget->widget(0))->setSelectedVertex();
-//                pb->hide();
-//            }
             qobject_cast<GLWidget*>(tabWidget->currentWidget())->setImageParams(iDlg->getImageParams());
             qobject_cast<GLWidget*>(tabWidget->currentWidget())->repaint();
         }
@@ -650,6 +638,8 @@ void MainWindow::writeSettings(void)
 //-------------------------------------------------------------------------------------
 void MainWindow::closeEvent(QCloseEvent *event)
 {
+    if (isStarted)
+        isStoped = true;
     isDocOpened = false;
     writeSettings();
     event->accept();
@@ -707,6 +697,13 @@ void MainWindow::loadFile(QString& fileName)
     QFile file;
     QTextStream in;
 
+
+    if (isStarted)
+    {
+        isStoped = true;
+        qApp->processEvents();
+    }
+
     file.setFileName(fileName);
     if (!file.open(QIODevice::ReadOnly))
     {
@@ -715,23 +712,59 @@ void MainWindow::loadFile(QString& fileName)
     }
     in.setDevice(&file);
 
+    isStoped = false;
+    isStarted = true;
+    ui->actionStop->setVisible(true);
+    pb->show();
+    QApplication::setOverrideCursor(Qt::BusyCursor);
     readFile(in);
 //    result->setText(in.readAll());
     file.close();
     if (file.error() != QFile::NoError)
     {
+        isStarted = false;
+        pb->hide();
+        QApplication::restoreOverrideCursor();
         QMessageBox::information(this, tr("Ошибка"), tr("Ошибка чтения файла %1!").arg(fileName));
         return;
     }
-    // Выводим сводку о загруженных данных
-    printInfo();
+    if (isStoped)
+    {
+        isStarted = false;
+        pb->hide();
+        QApplication::restoreOverrideCursor();
+        ui->actionStop->setVisible(false);
+        return;
+    }
     // Формируем КЭ и поверхность
     createFE();
+    if (isStoped)
+    {
+        isStarted = false;
+        pb->hide();
+        QApplication::restoreOverrideCursor();
+        ui->actionStop->setVisible(false);
+        return;
+    }
     createSurface();
-    isDocOpened = true;
+    isStarted = false;
+    QApplication::restoreOverrideCursor();
+    pb->hide();
+    ui->actionStop->setVisible(false);
+    if (isStoped)
+        return;
+
+    // Выводим сводку о загруженных данных
+    printInfo();
+    isStoped = isDocOpened = true;
     setWindowTitle(tr("Постпроцессор системы МІРЕЛА+, ЗНУ, 2014") + " + [" + fileName + "]");
     updateRecentFileActions(fileName);
     checkMenuState();
+}
+//-------------------------------------------------------------------------------------
+void MainWindow::stop(void)
+{
+    isStoped = true;
 }
 //-------------------------------------------------------------------------------------
 

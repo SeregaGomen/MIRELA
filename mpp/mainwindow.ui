@@ -76,6 +76,8 @@
    <addaction name="actionTranslate"/>
    <addaction name="separator"/>
    <addaction name="actionSetup"/>
+   <addaction name="separator"/>
+   <addaction name="actionStop"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionExit">
@@ -208,6 +210,21 @@
    </property>
    <property name="statusTip">
     <string>Настроить параметры визуализации объекта</string>
+   </property>
+  </action>
+  <action name="actionStop">
+   <property name="icon">
+    <iconset resource="mpp.qrc">
+     <normaloff>:/image/cancel.png</normaloff>:/image/cancel.png</iconset>
+   </property>
+   <property name="text">
+    <string> Стоп</string>
+   </property>
+   <property name="toolTip">
+    <string>Остановить загрузку данных</string>
+   </property>
+   <property name="statusTip">
+    <string>Остановить загрузку данных</string>
    </property>
   </action>
  </widget>
@@ -344,6 +361,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionStop</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>stop()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>292</x>
+     <y>165</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>openDocument()</slot>
@@ -353,5 +386,6 @@
   <slot>setScale()</slot>
   <slot>setTranslate()</slot>
   <slot>setupImageParams()</slot>
+  <slot>stop()</slot>
  </slots>
 </ui>
