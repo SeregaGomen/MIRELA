@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>586</width>
+    <height>331</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>Постпроцессор системы МІРЕЛА+, ЗНУ, 2014</string>
+  </property>
+  <widget class="QWidget" name="centralWidget"/>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>586</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>&amp;Файл</string>
+    </property>
+    <addaction name="actionOpen"/>
+    <addaction name="actionClose"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuAnalyse">
+    <property name="title">
+     <string>&amp;Анализ</string>
+    </property>
+    <addaction name="actionAnalyse"/>
+    <addaction name="separator"/>
+    <addaction name="actionRotate"/>
+    <addaction name="actionScale"/>
+    <addaction name="actionTranslate"/>
+    <addaction name="separator"/>
+    <addaction name="actionSetup"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>&amp;?</string>
+    </property>
+    <addaction name="actionAbout"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuAnalyse"/>
+   <addaction name="menuHelp"/>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionOpen"/>
+   <addaction name="separator"/>
+   <addaction name="actionAnalyse"/>
+   <addaction name="separator"/>
+   <addaction name="actionRotate"/>
+   <addaction name="actionScale"/>
+   <addaction name="actionTranslate"/>
+   <addaction name="separator"/>
+   <addaction name="actionSetup"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionExit">
+   <property name="text">
+    <string>В&amp;ыход</string>
+   </property>
+   <property name="statusTip">
+    <string>Завершть работу программы</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>&amp;О программе...</string>
+   </property>
+   <property name="statusTip">
+    <string>О программе...</string>
+   </property>
+  </action>
+  <action name="actionOpen">
+   <property name="icon">
+    <iconset resource="mpp.qrc">
+     <normaloff>:/image/open.png</normaloff>:/image/open.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Открыть...</string>
+   </property>
+   <property name="toolTip">
+    <string>Открыть существующий файл результатов МІРЕЛА+</string>
+   </property>
+   <property name="statusTip">
+    <string>Открыть существующий файл результатов МІРЕЛА+</string>
+   </property>
+   <property name="shortcut">
+    <string>F3</string>
+   </property>
+  </action>
+  <action name="actionClose">
+   <property name="text">
+    <string>&amp;Закрыть</string>
+   </property>
+   <property name="toolTip">
+    <string>Закрыть текущий файл данных</string>
+   </property>
+   <property name="statusTip">
+    <string>Закрыть текущий файл данных</string>
+   </property>
+  </action>
+  <action name="actionAnalyse">
+   <property name="icon">
+    <iconset resource="mpp.qrc">
+     <normaloff>:/image/kformula.png</normaloff>:/image/kformula.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Функция...</string>
+   </property>
+   <property name="toolTip">
+    <string>Выбрать функцию для анализа</string>
+   </property>
+   <property name="statusTip">
+    <string>Выбрать функцию для анализа</string>
+   </property>
+   <property name="shortcut">
+    <string>F4</string>
+   </property>
+  </action>
+  <action name="actionRotate">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="mpp.qrc">
+     <normaloff>:/image/rotate.png</normaloff>:/image/rotate.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Поворот</string>
+   </property>
+   <property name="toolTip">
+    <string>Включить режим вращения объекта</string>
+   </property>
+   <property name="statusTip">
+    <string>Включить режим вращения объекта</string>
+   </property>
+  </action>
+  <action name="actionScale">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="mpp.qrc">
+     <normaloff>:/image/scale.png</normaloff>:/image/scale.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Масштабирование</string>
+   </property>
+   <property name="toolTip">
+    <string>Включить режим масштабирования объекта</string>
+   </property>
+   <property name="statusTip">
+    <string>Включить режим масштабирования объекта</string>
+   </property>
+  </action>
+  <action name="actionTranslate">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="mpp.qrc">
+     <normaloff>:/image/build.png</normaloff>:/image/build.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Сдвиг</string>
+   </property>
+   <property name="toolTip">
+    <string>Включить режим смещения объекта</string>
+   </property>
+   <property name="statusTip">
+    <string>Включить режим смещения объекта</string>
+   </property>
+  </action>
+  <action name="actionSetup">
+   <property name="icon">
+    <iconset resource="mpp.qrc">
+     <normaloff>:/image/funct.png</normaloff>:/image/funct.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Параметры...</string>
+   </property>
+   <property name="toolTip">
+    <string>Настроить параметры визуализации объекта</string>
+   </property>
+   <property name="statusTip">
+    <string>Настроить параметры визуализации объекта</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources>
+  <include location="mpp.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>actionExit</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>292</x>
+     <y>165</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionOpen</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>openDocument()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>292</x>
+     <y>165</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionClose</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>closeDocument()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>292</x>
+     <y>165</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionAnalyse</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>analyseFunction()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>292</x>
+     <y>165</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionRotate</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>setRotate()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>292</x>
+     <y>165</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionScale</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>setScale()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>292</x>
+     <y>165</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionTranslate</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>setTranslate()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>292</x>
+     <y>165</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionSetup</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>setupImageParams()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>292</x>
+     <y>165</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>openDocument()</slot>
+  <slot>closeDocument()</slot>
+  <slot>analyseFunction()</slot>
+  <slot>setRotate()</slot>
+  <slot>setScale()</slot>
+  <slot>setTranslate()</slot>
+  <slot>setupImageParams()</slot>
+ </slots>
+</ui>
