@@ -24,8 +24,10 @@ public:
     bool isNegative;   // Негативное отображение
     bool isBW;         // Черно-белое отображение
     int numColor;      // Кол-во градаций цвета (цветов) при отображении
-    double koff;        // Коэффициент усиления трансформации
-    double alpha;       // Прозрачность материала
+    double koff;       // Коэффициент усиления трансформации
+    double alpha;      // Прозрачность материала
+    double factor;     // Параметры glPolygonOffcet;
+    double units;      // ...
     QColor bkgColor;   // Цвет фона изображения
 
     ImageParams(void)
@@ -52,6 +54,8 @@ public:
         isLimit = right.isLimit;
         isForce = right.isForce;
         bkgColor = right.bkgColor;
+        factor = right.factor;
+        units = right.units;
         return *this;
     }
     void write(QDataStream& file)
@@ -73,6 +77,8 @@ public:
         file << isLimit;
         file << isForce;
         file << bkgColor;
+        file << factor;
+        file << units;
     }
     void write(ofstream& file)
     {
@@ -95,6 +101,8 @@ public:
         file << bkgColor.red();
         file << bkgColor.green();
         file << bkgColor.blue();
+        file << factor;
+        file << units;
     }
     void read(QDataStream& file)
     {
@@ -115,6 +123,8 @@ public:
         file >> isLimit;
         file >> isForce;
         file >> bkgColor;
+        file >> factor;
+        file >> units;
     }
     void read(ifstream& file)
     {
@@ -145,9 +155,13 @@ public:
         bkgColor.setRed(r);
         bkgColor.setGreen(g);
         bkgColor.setBlue(b);
+        file >> factor;
+        file >> units;
+
     }
     void init(void)
     {
+        factor = units = 1.0;
         koff = 0.0;
         alpha = 1.0;
         numColor = 16;

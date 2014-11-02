@@ -57,7 +57,7 @@ void GLFunWidget::paintGL()
     if (params.isQuality)
     {
         glEnable(GL_POLYGON_OFFSET_FILL);
-        glPolygonOffset(1.0,1.0);
+        glPolygonOffset(params.factor,params.units);
     }
     else
         glDisable(GL_POLYGON_OFFSET_FILL);
@@ -151,14 +151,22 @@ void GLFunWidget::drawFacet23D(TVertex3D* vertex,int size)
     if (params.isFace)
     {
             // Рисование четырехугольника
-            vtx[0] = vertex[ind[0]];
-            vtx[1] = vertex[ind[1]];
-            vtx[2] = vertex[ind[3]];
-            drawTriangle3D(vtx);
-            vtx[0] = vertex[ind[0]];
-            vtx[1] = vertex[ind[2]];
-            vtx[2] = vertex[ind[3]];
-            drawTriangle3D(vtx);
+//            vtx[0] = vertex[ind[0]];
+//            vtx[1] = vertex[ind[1]];
+//            vtx[2] = vertex[ind[3]];
+//            drawTriangle3D(vtx);
+//            vtx[0] = vertex[ind[0]];
+//            vtx[1] = vertex[ind[2]];
+//            vtx[2] = vertex[ind[3]];
+//            drawTriangle3D(vtx);
+        vtx[0] = vertex[ind[0]];
+        vtx[1] = vertex[ind[1]];
+        vtx[2] = vertex[ind[2]];
+        drawTriangle3D(vtx);
+        vtx[0] = vertex[ind[0]];
+        vtx[1] = vertex[ind[2]];
+        vtx[2] = vertex[ind[3]];
+        drawTriangle3D(vtx);
     }
 
     if (params.isMesh)
@@ -619,7 +627,7 @@ void GLFunWidget::createNormal(void)
            D,
            maxLen;
 
-    Normal.resize(NumFaces,3);
+    Normal.resize(NumFaces,4);
     for (unsigned i = 0; i < NumFaces; i++)
     {
         for (unsigned j = 0; j < 3; j++)
@@ -633,11 +641,15 @@ void GLFunWidget::createNormal(void)
         C  = (x[1] - x[0])*(y[2] - y[0]) - (x[2] - x[0])*(y[1] - y[0]);
         D  = sqrt(A*A + B*B + C*C);
 
-        if (D == 0) D = 1;
+        if (D == 0)
+            D = 1;
 
         Normal[i][0] += A/D;
         Normal[i][1] += B/D;
         Normal[i][2] += C/D;
+
+        Normal[i][3] += Normal[i][0];
+
     }
     maxLen =*max_element(Normal.asVector().begin(),Normal.asVector().end());
     for (unsigned i = 0; i < Normal.size1(); i++)

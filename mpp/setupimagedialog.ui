@@ -123,6 +123,58 @@
      <bool>true</bool>
     </property>
    </widget>
+   <widget class="QLabel" name="label_11">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>110</y>
+      <width>41</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Factor:</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="leFactor">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>110</y>
+      <width>31</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>1</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_12">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>110</y>
+      <width>41</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Units:</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="leUnits">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>110</y>
+      <width>31</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>1</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QGroupBox" name="gbObject">
    <property name="geometry">
@@ -223,7 +275,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Transparency:</string>
+     <string>Прозрачность:</string>
     </property>
    </widget>
    <widget class="QSlider" name="hsAlpha">
@@ -541,7 +593,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>30</y>
+      <y>20</y>
       <width>191</width>
       <height>23</height>
      </rect>
@@ -589,5 +641,24 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>chbQuality</sender>
+   <signal>clicked()</signal>
+   <receiver>SetupImageDialog</receiver>
+   <slot>changeQuality()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>125</x>
+     <y>250</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>234</x>
+     <y>184</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
+ <slots>
+  <slot>changeQuality()</slot>
+ </slots>
 </ui>

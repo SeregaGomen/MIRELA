@@ -126,8 +126,16 @@ void MainWindow::readFile(QTextStream& in)
     prizn.resize(size);
 
     // Пропускаем лишние строки
-    for (int i = 0; i < 33; i++)
+    while (!in.atEnd())
+    {
+        str = in.readLine();
+        if (!str.contains("NU"))
+            continue;
         in.readLine();
+        break;
+    }
+
+
     // Считываем координаты
     pb->setMinimum(0);
     pb->setMaximum(size - 1);
@@ -161,7 +169,7 @@ void MainWindow::readFile(QTextStream& in)
         // Поиск номера итерации
         if (str.contains("ITER="))
         {
-            str = str.right(str.length() - 7);
+            str.replace("ITER="," ");
             ts.setString(&str);
             ts >> iter;
             if (ts.status() != QTextStream::Ok)

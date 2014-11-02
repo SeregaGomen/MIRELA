@@ -77,12 +77,16 @@ void SetupImageDialog::setup(bool isFunc)
     ui->chbLimit->setEnabled(!isFunc);
     ui->chbForce->setEnabled(!isFunc);
 
+    ui->leFactor->setEnabled(ui->chbQuality->isChecked());
+    ui->leUnits->setEnabled(ui->chbQuality->isChecked());
+
     // Цвет фона
     bkgColor = params.bkgColor;
     ui->pbColor->setAutoFillBackground(true);
     ui->pbColor->setStyleSheet(QString("background-color: rgb(%1, %2, %3)").arg(params.bkgColor.red()).arg(params.bkgColor.green()).arg(params.bkgColor.blue()));
 
-
+    ui->leFactor->setText(QString("%1").arg(params.factor));
+    ui->leUnits->setText(QString("%1").arg(params.units));
 }
 
 void SetupImageDialog::initParams(void)
@@ -115,6 +119,10 @@ bool SetupImageDialog::reload(void)
     params.koff = ui->leKoff->text().toDouble();
     params.alpha = double(ui->hsAlpha->sliderPosition())*0.1;
     params.bkgColor = bkgColor;
+
+    params.factor = ui->leFactor->text().toDouble();
+    params.units = ui->leUnits->text().toDouble();
+
 
     switch (ui->hsNumColor->sliderPosition())
     {
@@ -186,4 +194,10 @@ void SetupImageDialog::setKoffValue(void)
 void SetupImageDialog::changeLanguage(void)
 {
     ui->retranslateUi(this);
+}
+
+void SetupImageDialog::changeQuality(void)
+{
+    ui->leFactor->setEnabled(ui->chbQuality->isChecked());
+    ui->leUnits->setEnabled(ui->chbQuality->isChecked());
 }

@@ -18,6 +18,7 @@ class SetupImageDialog : public QDialog
 public slots:
     void accept(void);
     void changeBkgColor(void);
+    void changeQuality(void);
 
 public:
     explicit SetupImageDialog(QWidget *parent = 0);
