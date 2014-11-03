@@ -55,6 +55,7 @@ MainWindow::MainWindow(QWidget *parent) :
     pb = new QProgressBar(statusBar());
     pb->setTextVisible(true);
     statusBar()->addPermanentWidget(pb);
+    pb->hide();
 
     connect(tabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(closeTab(int)));
     connect(tabWidget, SIGNAL(currentChanged(int)), this, SLOT(changeTab(int)));
