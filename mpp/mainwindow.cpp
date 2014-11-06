@@ -162,6 +162,9 @@ void MainWindow::readFile(QTextStream& in)
             return;
         }
     }
+    // Формируем КЭ
+    createFE();
+
     rList->clear();
     // Считываем данные (с учетом итераций)
     while (!in.atEnd())
@@ -240,11 +243,17 @@ void MainWindow::readFile(QTextStream& in)
         rList->addResult(u1,(prefix + u[0]).toStdString());
         rList->addResult(u2,(prefix + u[1]).toStdString());
         rList->addResult(u3,(prefix + u[2]).toStdString());
+        middleResult(sg11); // Осреднение рез-та
         rList->addResult(sg11,(prefix + sg[0]).toStdString());
+        middleResult(sg12); // Осреднение рез-та
         rList->addResult(sg12,(prefix + sg[1]).toStdString());
+        middleResult(sg13); // Осреднение рез-та
         rList->addResult(sg13,(prefix + sg[2]).toStdString());
+        middleResult(sg22); // Осреднение рез-та
         rList->addResult(sg22,(prefix + sg[3]).toStdString());
+        middleResult(sg23); // Осреднение рез-та
         rList->addResult(sg23,(prefix + sg[4]).toStdString());
+        middleResult(sg33); // Осреднение рез-та
         rList->addResult(sg33,(prefix + sg[5]).toStdString());
     }
 }
@@ -745,18 +754,8 @@ void MainWindow::loadFile(QString& fileName)
         ui->actionStop->setVisible(false);
         return;
     }
-    // Формируем КЭ и поверхность
-    createFE();
-    if (isStoped)
-    {
-        isStarted = false;
-        pb->hide();
-        QApplication::restoreOverrideCursor();
-        ui->actionStop->setVisible(false);
-        return;
-    }
+    // Формируем поверхность
     createSurface();
-    middleResult();
     isStarted = false;
     QApplication::restoreOverrideCursor();
     pb->hide();
@@ -777,15 +776,15 @@ void MainWindow::stop(void)
     isStoped = true;
 }
 //-------------------------------------------------------------------------------------
-void MainWindow::middleResult(void)
+void MainWindow::middleResult(vector<double>& u)
 {
     vector<int> middle;
-    double sum[6];
-    unsigned minIndex;
+    vector<double> nu;
+    int minIndex;
 
-    // Напряжения S[i][3]-S[i][8] заданы в центрах КЭ. Осредняем их по вершинам эл-тов
+    // Напряжения заданы в центрах КЭ. Осредняем их по вершинам эл-тов
     middle.resize(x.size());
-    nU.ReSize(x.size(),6);
+    nu.resize(x.size());
 
 
     pb->setMinimum(0);
@@ -799,30 +798,21 @@ void MainWindow::middleResult(void)
             pb->setValue(i);
         qApp->processEvents();
 
-        sum[0] = sum[1] = sum[2] = sum[3] = sum[4] = sum[5] = 0;
         minIndex = fe[i][0];
-
-        for (unsigned j = 1; j < fe.Size2(); j++)
+        for (unsigned j = 1; j < fe.size2(); j++)
             if (fe[i][j] < minIndex)
                 minIndex = fe[i][j];
 
-        for (unsigned k = 0; k < 6; k++)
-            sum[k] =  U[MinIndex][3 + k];
-
-            sum[k] = (*rList)[k + 3].getResults();
 
 
-        for (DWORD j = 0; j < FE.Size2(); j++)
+        for (unsigned j = 0; j < fe.size2(); j++)
         {
-            for (DWORD k = 0; k < 6; k++)
-                nU[FE[i][j]][k] += Sum[k];
-            Middle[FE[i][j]]++;
+            nu[fe[i][j]] += u[minIndex];
+            middle[fe[i][j]]++;
         }
-        WinMess();
     }
 
-    for (unsigned i = 0; i < NumVertex; i++)
-        for (unsigned j = 3; j < 9; j++)
-            if (middle[i])
-                U[i][j] = nU[i][j - 3]/double(Middle[i]);
+    for (unsigned i = 0; i < x.size(); i++)
+        if (middle[i])
+            u[i] = nu[i]/double(middle[i]);
 }

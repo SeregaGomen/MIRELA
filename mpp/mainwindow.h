@@ -73,7 +73,7 @@ private:
     void createSurface(void);
     void readSettings(void);
     void createRecentMenu(void);
-    void middleResult(void);
+    void middleResult(vector<double>&);
     void writeSettings(void);
     void setupRecentActions(void);
     void updateRecentFileActions(const QString&);
