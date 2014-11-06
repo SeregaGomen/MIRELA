@@ -756,6 +756,7 @@ void MainWindow::loadFile(QString& fileName)
         return;
     }
     createSurface();
+    middleResult();
     isStarted = false;
     QApplication::restoreOverrideCursor();
     pb->hide();
@@ -776,4 +777,52 @@ void MainWindow::stop(void)
     isStoped = true;
 }
 //-------------------------------------------------------------------------------------
+void MainWindow::middleResult(void)
+{
+    vector<int> middle;
+    double sum[6];
+    unsigned minIndex;
 
+    // Напряжения S[i][3]-S[i][8] заданы в центрах КЭ. Осредняем их по вершинам эл-тов
+    middle.resize(x.size());
+    nU.ReSize(x.size(),6);
+
+
+    pb->setMinimum(0);
+    pb->setMaximum(fe.size1() - 1);
+    pb->setFormat(tr("Осреднение результатов"));
+    for (unsigned i = 0; i < fe.size1(); i++)
+    {
+        if (isStoped)
+            return;
+        if (i%10 == 0)
+            pb->setValue(i);
+        qApp->processEvents();
+
+        sum[0] = sum[1] = sum[2] = sum[3] = sum[4] = sum[5] = 0;
+        minIndex = fe[i][0];
+
+        for (unsigned j = 1; j < fe.Size2(); j++)
+            if (fe[i][j] < minIndex)
+                minIndex = fe[i][j];
+
+        for (unsigned k = 0; k < 6; k++)
+            sum[k] =  U[MinIndex][3 + k];
+
+            sum[k] = (*rList)[k + 3].getResults();
+
+
+        for (DWORD j = 0; j < FE.Size2(); j++)
+        {
+            for (DWORD k = 0; k < 6; k++)
+                nU[FE[i][j]][k] += Sum[k];
+            Middle[FE[i][j]]++;
+        }
+        WinMess();
+    }
+
+    for (unsigned i = 0; i < NumVertex; i++)
+        for (unsigned j = 3; j < 9; j++)
+            if (middle[i])
+                U[i][j] = nU[i][j - 3]/double(Middle[i]);
+}

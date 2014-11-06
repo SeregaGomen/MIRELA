@@ -7,5 +7,6 @@
         <file>image/rotate.png</file>
         <file>image/scale.png</file>
         <file>image/cancel.png</file>
+        <file>image/app.ico</file>
     </qresource>
 </RCC>
