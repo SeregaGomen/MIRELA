@@ -43,10 +43,10 @@ FORMS    += mainwindow.ui \
 RESOURCES += \
     mpp.qrc
 
-#win32 {
+win32 {
 
-#    RC_FILE += mpp.rc
-#}
+    RC_FILE += mpp.rc
+}
 
 
 OTHER_FILES +=

@@ -54,6 +54,15 @@ MainWindow::MainWindow(QWidget *parent) :
 
     pb = new QProgressBar(statusBar());
     pb->setTextVisible(true);
+
+
+/*    pb->setStyleSheet(pb->property("defaultStyleSheet").toString() + " QProgressBar { \
+                                    border: 2px solid grey; border-radius: 5px; } \
+                                    QProgressBar::chunk { background-color: #05B8CC; width: 20px; }  QProgressBar { \
+                                    border: 2px solid grey; border-radius: 5px; text-align: center; }");*/
+    pb->setStyleSheet(pb->property("defaultStyleSheet").toString() + " QProgressBar { text-align: center; }");
+
+
     statusBar()->addPermanentWidget(pb);
     pb->hide();
 
@@ -268,7 +277,7 @@ void MainWindow::printInfo(void)
     webOut += "<h1>";
     webOut += QString(tr("Результаты расчета"));
     webOut += "</h1><br>";
-    webOut += QString(tr("Количество узлов в модели (%1x%2x%3): <b>%4</b>\n")).arg(m1).arg(m2).arg(m3).arg(x.size());
+    webOut += QString(tr("Количество узлов (%1x%2x%3): <b>%4</b>\n")).arg(m1).arg(m2).arg(m3).arg(x.size());
     webOut += QString("<br><table border=\"1\" cellpadding=\"4\" cellspacing=\"0\"><tr><th>%1</th><th>%2</th><th>%3</th></tr>").arg(tr("Функция")).arg("min").arg("max");
     for (unsigned i = 0; i < rList->size(); i++)
         webOut += QString("<tr><td>%1</td><td align=\"right\">%2</td><td align=\"right\">%3</td></tr>").arg((*rList)[i].getName().c_str()).arg((*rList)[i].min()).arg((*rList)[i].max());
@@ -499,6 +508,8 @@ void MainWindow::createSurface(void)
                         }
             }
     }
+    pb->setValue(fe.size1() - 1);
+    qApp->processEvents();
     numFaces = 0;
     for (i = 0; i < (int)fe.size1(); i++)
         for (j = 0; j < num1; j++)
@@ -816,3 +827,4 @@ void MainWindow::middleResult(vector<double>& u)
         if (middle[i])
             u[i] = nu[i]/double(middle[i]);
 }
+//-------------------------------------------------------------------------------------
