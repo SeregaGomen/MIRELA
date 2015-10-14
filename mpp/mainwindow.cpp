@@ -3,12 +3,13 @@
 #include <QProgressBar>
 #include <QSettings>
 #include <QCloseEvent>
+#include <QTextEdit>
 
-#if QT_VERSION < 5
-    #include <QtWebKit/QWebView>
-#else
-    #include <QWebView>
-#endif
+//#if QT_VERSION < 5
+//    #include <QtWebKit/QWebView>
+//#else
+//    #include <QWebView>
+//#endif
 #include <QTextCodec>
 #include <QFile>
 #include <QTextStream>
@@ -284,9 +285,15 @@ void MainWindow::printInfo(void)
         webOut += QString("<tr><td>%1</td><td align=\"right\">%2</td><td align=\"right\">%3</td></tr>").arg((*rList)[i].getName().c_str()).arg((*rList)[i].min()).arg((*rList)[i].max());
     webOut += "</table><br>";
 
+//    if (!tabWidget->count())
+//        tabWidget->addTab(new QWebView(),tr("Результаты"));
+//    qobject_cast<QWebView*>(tabWidget->widget(0))->setHtml(webOut);
+
+
     if (!tabWidget->count())
-        tabWidget->addTab(new QWebView(),tr("Результаты"));
-    qobject_cast<QWebView*>(tabWidget->widget(0))->setHtml(webOut);
+        tabWidget->addTab(new QTextEdit(webOut),tr("Результаты"));
+//    qobject_cast<QWebView*>(tabWidget->widget(0))->setHtml(webOut);
+
     qApp->processEvents();
 }
 //-------------------------------------------------------------------------------------

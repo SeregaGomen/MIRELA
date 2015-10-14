@@ -5,14 +5,14 @@
 #-------------------------------------------------
 
 
-QT       += core gui webkit opengl
+QT       += core gui opengl #webkit
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 greaterThan(QT_VERSION, 4.8.1) {
 
     LIBS = -lGLU
-    QT       += webkitwidgets
+    #QT       += webkitwidgets
 }
 
 TARGET = mpp
