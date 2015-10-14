@@ -199,72 +199,103 @@ void GLFunWidget::calcSelection(int /*x*/, int /*y*/)
 void GLFunWidget::initColorTable(void)
 {
     double h,
-          red   = 0,
-          green = 0,
-          blue  = 1,
-          u,
-          value;
+           red   = 0,
+           green = 0,
+           blue  = 1,
+           u,
+           step = params.numColor/6.0;
 
 
     uMin = *min_element((*results)[funIndex].getResults().begin(),(*results)[funIndex].getResults().end());
     uMax = *max_element((*results)[funIndex].getResults().begin(),(*results)[funIndex].getResults().end());
     u    = max(fabs(uMin),fabs(uMax));
-    h    = 1.0/double(params.numColor);
+    h    = 1.0/float(params.numColor);
 
-    if (params.isRGB)
+    if (uMin == uMax)
+        uMax++;
+    if (params.isRGB || params.isSpectral)
     {
+        u = max(fabs(uMin),fabs(uMax));
         uMin = -u;
         uMax =  u;
-
-        if (uMin == uMax)
-        {
-            uMin -= 1;
-            uMax += 1;
-        }
-        red = 0.0;
-        green = 0.0;
-        blue = 1.0;
-        value = uMin;
-        for (int i = 0; i < params.numColor; i++)
-        {
-            colorTable[i].setRGB(red,green,blue);
-            colorTable[i].setValue(value);
-            if (i < params.numColor*0.5)
-            {
-                blue -= 2.0*h;
-                green += 2.0*h;
-            }
-            else
-            {
-                red += 2.0*h;
-                green -= 2.0*h;
-                blue = 0;
-            }
-            value += (uMax - uMin)*h;
-        }
+        h = 2.0/params.numColor;
     }
-    if (params.isBW)
+    else
     {
-        if (uMax < 0)
-            uMax = 0;
-        else if (uMin > 0)
-            uMin = 0;
-
-        // От черного к белому
-        red   = 0.0;
-        green = 0.0;
-        blue  = 0.0;
-        value = 0.0;
-        for (int i = 0; i < params.numColor - 1; i++)
+        red = green = blue = 0.3;
+        h = 0.6/(params.numColor - 1);
+    }
+    if (params.isSpectral)
+    {
+        red = 1;
+        green = blue = 0;
+        h = 1.0/step;
+    }
+    for (int i = 0; i < params.numColor; i++)
+    {
+        if (params.isSpectral)
         {
-            colorTable[i].setRGB(red,green,blue);
-            colorTable[i].setValue(value);
-            red += h;
-            green += h;
-            blue += h;
-            value += (uMax - uMin)*h;
+            if (i < 2*step) // Красный-оранжевый-желтый
+            {
+                colorTable[params.numColor - i - 1].setRGB(1,green,0);
+                if ((green += h*0.5) > 1.0)
+                    green = 1.0;
+            }
+            if (i >= 2*step && i < 3*step) // желтый-зеленый
+            {
+                colorTable[params.numColor - i - 1].setRGB(red,1,0);
+                if ((red -= h) < 0.0)
+                    red = 0.0;
+            }
+
+            if (i >= 3*step && i < 4*step) // зеленый-голубой
+            {
+                colorTable[params.numColor - i - 1].setRGB(0,1,blue);
+                if ((blue += h) > 1.0)
+                    blue = 1.0;
+            }
+            if (i >= 4*step && i < 5*step) // голубой-синий
+            {
+                colorTable[params.numColor - i - 1].setRGB(0,green,1);
+                if ((green -= h) < 0.0)
+                    green = 0.0;
+            }
+            if (i >= 5*step) // синий-фиолетовый
+            {
+                colorTable[params.numColor - i - 1].setRGB(red,0,1);
+                if ((red += h) > 1.0)
+                    red = 1.0;
+            }
+            continue;
         }
-        colorTable[params.numColor - 1].setRGB(1,1,1);
+        colorTable[i].setRGB(red,green,blue);
+
+        if (params.isRGB)
+        {
+            if (i == 0.5*params.numColor)
+            {
+                red = h;
+                blue = 0;
+                green = 1 - h;
+            }
+            if (i < 0.5*params.numColor)
+            {
+                blue -= h;
+                green += h;
+                red = 0;
+            }
+            if (i > 0.5*params.numColor)
+            {
+                blue = 0;
+                green -= h;
+                red += h;
+            }
+        }
+        else
+        {
+            red += h;
+            green = blue = red;
+        }
     }
     if (params.isNegative)
         for (int i = 0; i < params.numColor; i++)
