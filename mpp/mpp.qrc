@@ -8,5 +8,6 @@
         <file>image/scale.png</file>
         <file>image/cancel.png</file>
         <file>image/app.ico</file>
+        <file>image/copy.png</file>
     </qresource>
 </RCC>

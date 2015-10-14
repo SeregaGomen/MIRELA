@@ -140,6 +140,7 @@ public:
         surface = NULL;
         results = NULL;
     }
+    void forcePaint(void);
 };
 //---------------------------------------------------------------------
 

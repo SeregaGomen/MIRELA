@@ -24,6 +24,7 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
 public slots:
     void openDocument(void);
     void closeDocument(void)
@@ -38,6 +39,7 @@ public slots:
     void setTranslate(void);
     void setupImageParams(void);
     void stop(void);
+    void copyImage(void);
 
 protected:
     void closeEvent(QCloseEvent *event);

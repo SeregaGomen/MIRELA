@@ -1,3 +1,4 @@
+#include <QClipboard>
 #include <QFileDialog>
 #include <QProgressBar>
 #include <QSettings>
@@ -320,6 +321,7 @@ void MainWindow::changeTab(int nTab)
     ui->actionRotate->setEnabled(isEnabled);
     ui->actionScale->setEnabled(isEnabled);
     ui->actionTranslate->setEnabled(isEnabled);
+    ui->actionCopy->setEnabled(isEnabled);
 //    ui->actionAnalyse->setEnabled(isEnabled);
     ui->actionAnalyse->setEnabled(isDocOpened);
     ui->actionSetup->setEnabled(isEnabled);
@@ -341,6 +343,7 @@ void MainWindow::checkMenuState(void)
     ui->actionClose->setEnabled(isDocOpened);
     ui->actionAnalyse->setEnabled(isDocOpened);
 
+    ui->actionCopy->setEnabled(isDocOpened && isEnabled);
     ui->actionRotate->setEnabled(isDocOpened && isEnabled);
     ui->actionScale->setEnabled(isDocOpened && isEnabled);
     ui->actionTranslate->setEnabled(isDocOpened && isEnabled);
@@ -826,5 +829,14 @@ void MainWindow::middleResult(vector<double>& u)
     for (unsigned i = 0; i < x.size(); i++)
         if (middle[i])
             u[i] = nu[i]/double(middle[i]);
+}
+//-------------------------------------------------------------------------------------
+void MainWindow::copyImage(void)
+{
+    QClipboard *clipboard = QApplication::clipboard();
+
+//    clipboard->setPixmap(QPixmap::grabWidget(qobject_cast<GLWidget*>(tabWidget->currentWidget())->renderPixmap()));
+    qobject_cast<GLFunWidget*>(tabWidget->currentWidget())->forcePaint();
+    clipboard->setImage(qobject_cast<GLFunWidget*>(tabWidget->currentWidget())->grabFrameBuffer(true));
 }
 //-------------------------------------------------------------------------------------

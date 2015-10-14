@@ -56,7 +56,14 @@
     </property>
     <addaction name="actionAbout"/>
    </widget>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>&amp;Правка</string>
+    </property>
+    <addaction name="actionCopy"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menu"/>
    <addaction name="menuAnalyse"/>
    <addaction name="menuHelp"/>
   </widget>
@@ -68,6 +75,8 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionOpen"/>
+   <addaction name="separator"/>
+   <addaction name="actionCopy"/>
    <addaction name="separator"/>
    <addaction name="actionAnalyse"/>
    <addaction name="separator"/>
@@ -227,6 +236,21 @@
     <string>Остановить загрузку данных</string>
    </property>
   </action>
+  <action name="actionCopy">
+   <property name="icon">
+    <iconset resource="mpp.qrc">
+     <normaloff>:/image/copy.png</normaloff>:/image/copy.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Копировать</string>
+   </property>
+   <property name="toolTip">
+    <string>Копировать текущее изображение в буфер обмена</string>
+   </property>
+   <property name="statusTip">
+    <string>Копировать текущее изображение в буфер обмена</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
@@ -377,6 +401,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionCopy</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>copyImage()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>292</x>
+     <y>165</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>openDocument()</slot>
@@ -387,5 +427,6 @@
   <slot>setTranslate()</slot>
   <slot>setupImageParams()</slot>
   <slot>stop()</slot>
+  <slot>copyImage()</slot>
  </slots>
 </ui>

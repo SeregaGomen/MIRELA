@@ -48,9 +48,8 @@ GLFunWidget::GLFunWidget(vector<double>* px,vector<double>* py,vector<double>* p
     connect(this, SIGNAL(customContextMenuRequested(QPoint)),this, SLOT(showContextMenu(QPoint)));
 }
 /*******************************************************************/
-void GLFunWidget::paintGL()
+void GLFunWidget::paintGL(void)
 {
-
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
@@ -86,6 +85,12 @@ void GLFunWidget::paintGL()
         displaySceleton();
     if (params.isCoord)
         drawCoordinateCross();
+}
+/*******************************************************************/
+void GLFunWidget::forcePaint(void)
+{
+    isIdle = true;
+    paintGL();
 }
 /*******************************************************************/
 void GLFunWidget::displayObject(void)
